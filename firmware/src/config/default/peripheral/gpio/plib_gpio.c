@@ -64,21 +64,19 @@ void GPIO_Initialize ( void )
     CNPDASET = 0x200; /* Pull-Down Enable */
 
     /* PORTB Initialization */
-    LATB = 0x2; /* Initial Latch Value */
-    TRISBCLR = 0x2; /* Direction Control */
-    ANSELBCLR = 0x4002; /* Digital Mode Enable */
+    ANSELBCLR = 0x4000; /* Digital Mode Enable */
 
     /* PORTC Initialization */
-    LATC = 0x30; /* Initial Latch Value */
-    TRISCCLR = 0x34; /* Direction Control */
-    ANSELCCLR = 0xf; /* Digital Mode Enable */
+    LATC = 0x70; /* Initial Latch Value */
+    TRISCCLR = 0x74; /* Direction Control */
+    ANSELCCLR = 0xd; /* Digital Mode Enable */
 
 
 
     /* PPS Input Remapping */
     SDI1R = 7;
     U1CTSR = 5;
-    U1RXR = 6;
+    U1RXR = 2;
     U2RXR = 6;
 
     /* PPS Output Remapping */

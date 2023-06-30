@@ -66,13 +66,22 @@
 #define X1TXN_TXD_Get()               ((PORTB >> 9) & 0x1)
 #define X1TXN_TXD_PIN                  GPIO_PIN_RB9
 
+/*** Macros for GPIO_RC6_LDOEN pin ***/
+#define GPIO_RC6_LDOEN_Set()               (LATCSET = (1<<6))
+#define GPIO_RC6_LDOEN_Clear()             (LATCCLR = (1<<6))
+#define GPIO_RC6_LDOEN_Toggle()            (LATCINV= (1<<6))
+#define GPIO_RC6_LDOEN_OutputEnable()      (TRISCCLR = (1<<6))
+#define GPIO_RC6_LDOEN_InputEnable()       (TRISCSET = (1<<6))
+#define GPIO_RC6_LDOEN_Get()               ((PORTC >> 6) & 0x1)
+#define GPIO_RC6_LDOEN_PIN                  GPIO_PIN_RC6
+
 /*** Macros for X1TXN_RXD pin ***/
 #define X1TXN_RXD_Get()               ((PORTC >> 8) & 0x1)
 #define X1TXN_RXD_PIN                  GPIO_PIN_RC8
 
-/*** Macros for TRIM_Z pin ***/
-#define TRIM_Z_Get()               ((PORTB >> 13) & 0x1)
-#define TRIM_Z_PIN                  GPIO_PIN_RB13
+/*** Macros for TRIM_Y pin ***/
+#define TRIM_Y_Get()               ((PORTB >> 13) & 0x1)
+#define TRIM_Y_PIN                  GPIO_PIN_RB13
 
 /*** Macros for GPIO_RA10_LED pin ***/
 #define GPIO_RA10_LED_Set()               (LATASET = (1<<10))
@@ -108,22 +117,13 @@
 #define GIMBAL_Z_Get()               ((PORTB >> 0) & 0x1)
 #define GIMBAL_Z_PIN                  GPIO_PIN_RB0
 
-/*** Macros for GPIO_RB1_LDOEN pin ***/
-#define GPIO_RB1_LDOEN_Set()               (LATBSET = (1<<1))
-#define GPIO_RB1_LDOEN_Clear()             (LATBCLR = (1<<1))
-#define GPIO_RB1_LDOEN_Toggle()            (LATBINV= (1<<1))
-#define GPIO_RB1_LDOEN_OutputEnable()      (TRISBCLR = (1<<1))
-#define GPIO_RB1_LDOEN_InputEnable()       (TRISBSET = (1<<1))
-#define GPIO_RB1_LDOEN_Get()               ((PORTB >> 1) & 0x1)
-#define GPIO_RB1_LDOEN_PIN                  GPIO_PIN_RB1
-
 /*** Macros for TRIM_X pin ***/
-#define TRIM_X_Get()               ((PORTB >> 2) & 0x1)
-#define TRIM_X_PIN                  GPIO_PIN_RB2
+#define TRIM_X_Get()               ((PORTB >> 1) & 0x1)
+#define TRIM_X_PIN                  GPIO_PIN_RB1
 
-/*** Macros for TRIM_Y pin ***/
-#define TRIM_Y_Get()               ((PORTB >> 3) & 0x1)
-#define TRIM_Y_PIN                  GPIO_PIN_RB3
+/*** Macros for TRIM_Z pin ***/
+#define TRIM_Z_Get()               ((PORTC >> 1) & 0x1)
+#define TRIM_Z_PIN                  GPIO_PIN_RC1
 
 /*** Macros for GPIO_RC2_BM70_HCI_RST_N pin ***/
 #define GPIO_RC2_BM70_HCI_RST_N_Set()               (LATCSET = (1<<2))
@@ -133,6 +133,10 @@
 #define GPIO_RC2_BM70_HCI_RST_N_InputEnable()       (TRISCSET = (1<<2))
 #define GPIO_RC2_BM70_HCI_RST_N_Get()               ((PORTC >> 2) & 0x1)
 #define GPIO_RC2_BM70_HCI_RST_N_PIN                  GPIO_PIN_RC2
+
+/*** Macros for _input_only_RA4_ pin ***/
+#define _input_only_RA4__Get()               ((PORTA >> 4) & 0x1)
+#define _input_only_RA4__PIN                  GPIO_PIN_RA4
 
 /*** Macros for GPIO_RC4_SPI_NCS_ACC pin ***/
 #define GPIO_RC4_SPI_NCS_ACC_Set()               (LATCSET = (1<<4))

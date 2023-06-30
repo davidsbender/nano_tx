@@ -282,7 +282,7 @@ void APP_Tasks ( void )
             // Shutdown mode: wait until capture is no longer pending, then
             // disable power supply
             if (appData.shutdown /*&& !Capture_IsPending()*/) {
-                GPIO_RB1_LDOEN_Clear();
+                GPIO_RC6_LDOEN_Clear();
             }
             
             // Command line interface
@@ -516,7 +516,7 @@ void APP_Tasks ( void )
             if ((ts32 & TS_2S_MASK) < (ts32d & TS_2S_MASK)) {
                 float vBat = (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN;
                 if (vBat < VBAT_LOW_SHUTDOWN) {
-                    appData.shutdown = true;
+                    //appData.shutdown = true;
                     //Capture_Stop();
                     //RB_Printf(appUsbRbHostIn, "LOW BATTERY VOLTAGE\n");
                 }
