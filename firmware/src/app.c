@@ -309,7 +309,7 @@ void APP_Tasks ( void )
                 
                 char ans[256] = "";
                 if (strstr(command, "HALLO") != NULL) {
-                    sprintf(ans, "AU HOI!");
+                    sprintf(ans, "AU HOI!%s", config.ansEol);
 //                } else if (isCmd(command, "CAPT?", NULL)) {
 //                    sprintf(ans, "%d%s", (Capture_IsActive())? 1: 0, config.ansEol);
 //                } else if (isCmd(command, "CAPT 1", NULL)) {
@@ -352,7 +352,10 @@ void APP_Tasks ( void )
 //                            lps22hhData.id, lps22hhData.p, lps22hhData.t,
 //                            config.ansEol);
                 } else if (strstr(command, "DIAG:ADC?") != NULL) {
-                    sprintf(ans, "BATMS %u (%f V)%s", appData.adcAd9Batms,
+                    sprintf(ans, "X %u, Y %u, BATMS %u (%f V)%s",
+                            appData.adcAd0GimbalX,
+                            appData.adcAd1GimbalY,
+                            appData.adcAd9Batms,
                             (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN,
                             config.ansEol);
 //                } else if (isCmd(command, "DIAG:CAPT?", NULL)) {
@@ -494,21 +497,17 @@ void APP_Tasks ( void )
                 LSM6DSV16X_ReadTAG();
             }
             
-//            // Read SDP3X differential pressure sensor
-//            // The SDP3X has 25 ms power up time, thus delay initialization
-//            if (!SDP3X_IsInitialized()) {
-//                if ((ts32 & TS_30MS_MASK) < (ts32d & TS_30MS_MASK)) {
-//                    SDP3X_Initialize();
-//                }
-//            } else if (iis2iclxData.newData) {
-//                SDP3X_Read();
-//            }
-            
             // ADC battery voltage
             // (I don't like the generated plib_adc.c library, write own one)
             if (IFS0bits.AD1IF) {
-                appData.adcAd9Batms = appData.adcAd9Batms * 15 / 16
+                // ADC input scan stores samples from selected sources in an
+                // array of result buffers, the order is as shown in MCC
+                appData.adcAd0GimbalX = appData.adcAd0GimbalX * 15 / 16
                         + ADC_ResultGet(ADC_RESULT_BUFFER_0);
+                appData.adcAd1GimbalY = appData.adcAd1GimbalY * 15 / 16
+                        + ADC_ResultGet(ADC_RESULT_BUFFER_1);
+                appData.adcAd9Batms = appData.adcAd9Batms * 15 / 16
+                        + ADC_ResultGet(ADC_RESULT_BUFFER_5);
                 IFS0CLR = _IFS0_AD1IF_MASK;
             }
             

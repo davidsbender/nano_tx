@@ -100,6 +100,8 @@ typedef struct
     bool buttonEventArmed;
     uint32_t counter;
     bool shutdown;
+    uint32_t adcAd0GimbalX;
+    uint32_t adcAd1GimbalY;
     uint32_t adcAd9Batms;
 //    CAPTURE_SAMPLE sample;
 } APP_DATA;

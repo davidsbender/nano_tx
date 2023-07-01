@@ -54,8 +54,11 @@ void ADC_Initialize(void)
     AD1CON1CLR = _AD1CON1_ON_MASK;
 
     AD1CON1 = 0xe4;
+    AD1CON2 = 0x418;
     AD1CON3 = 0x1fff;
     AD1CHS = 0x90000;
+    /* Input Scan */
+    AD1CSSL = 0xa8f;
 
 
     /* Turn ON ADC */
