@@ -249,6 +249,7 @@ void SYS_Initialize ( void* data )
     APP_Initialize();
     APP_USB_Initialize();
     APP_BLE_Initialize();
+    APP_X1TXO_Initialize();
 
 
     EVIC_Initialize();

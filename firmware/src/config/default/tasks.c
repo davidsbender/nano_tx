@@ -94,9 +94,14 @@ void SYS_Tasks ( void )
 
     /* Call Application task APP_BLE. */
     APP_BLE_Tasks();
-
+    
+    /* Call Application task APP_X1TXO. */
+    APP_X1TXO_Tasks();
+    
     /* If tasks are not busy enter idle mode */
         /* Will wake up upon core timer event */
+        /* For now always stay in normal mode, optimize later */
+    taskBusy = true;
     if (!taskBusy) {
         POWER_LowPowerModeEnter(LOW_POWER_IDLE_MODE);
     }

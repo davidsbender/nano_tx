@@ -58,7 +58,7 @@ void ADC_Initialize(void)
     AD1CON3 = 0x1fff;
     AD1CHS = 0x90000;
     /* Input Scan */
-    AD1CSSL = 0xa8f;
+    AD1CSSL = 0x150e;
 
 
     /* Turn ON ADC */

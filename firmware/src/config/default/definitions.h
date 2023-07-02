@@ -54,10 +54,10 @@
 #include "usb/usb_chapter_9.h"
 #include "usb/usb_device.h"
 #include "peripheral/adc/plib_adc.h"
+#include "peripheral/coretimer/plib_coretimer.h"
 #include "usb/usb_device_cdc.h"
 #include "usb/usb_cdc.h"
 #include "peripheral/power/plib_power.h"
-#include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/uart/plib_uart1.h"
 #include "peripheral/uart/plib_uart2.h"
 #include "peripheral/tmr/plib_tmr2.h"
@@ -69,6 +69,7 @@
 #include "app.h"
 #include "app_usb.h"
 #include "app_ble.h"
+#include "app_x1txo.h"
 
 
 
