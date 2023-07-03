@@ -74,7 +74,27 @@ APP_X1TXO_DATA appX1txoData;
 
 /* TODO:  Add any necessary local functions.
 */
-
+void APP_X1TXO_Send(void)
+{
+    uint16_t ch[6];
+    uint8_t x1txoPacket[14];
+    
+    // Bytes 1 and 0: bind / normal operation, otherwise unknown
+    x1txoPacket[0] = 0x18;
+    x1txoPacket[1] = 0x00;
+    
+    // Bytes 3 and 2: channel 0
+    //     6 most significant bits: channel number
+    //     10 least significant bits: channel value
+    x1txoPacket[2] = (0 << 2) | ((ch[0] >> 8) & 0x3);
+    x1txoPacket[3] =            ((ch[0] >> 0) & 0xFF);
+    
+    // Bytes 5 and 4: channel 1
+    //     6 most significant bits: channel number
+    //     10 least significant bits: channel value
+    x1txoPacket[4] = (1 << 2) | ((ch[1] >> 8) & 0x3);
+    x1txoPacket[5] =            ((ch[1] >> 0) & 0xFF);
+}
 
 // *****************************************************************************
 // *****************************************************************************
