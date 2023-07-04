@@ -80,20 +80,52 @@ void APP_X1TXO_Send(void)
     uint16_t ch[X1TXO_CHANNELS];
     uint8_t x1txoPacket[2 + 2 * X1TXO_CHANNELS];
     
-    // Reset packet data
+    // Reset packet data to all zeroes
     memset(x1txoPacket, 0, sizeof(x1txoPacket));
     
-    // Bytes 0 and 1: bind / normal operation, otherwise unknown
-    x1txoPacket[0] = 0x18;
-    x1txoPacket[1] = 0x00;
+    if (appX1txoData.mode == X1TXO_MODE_START) {
+        // Bytes 0 and 1: bind / normal operation, otherwise unknown
+        x1txoPacket[0] = 0x18;
+        x1txoPacket[1] = 0x00;
     
-    // Bytes 2 to 13: channels
-    // 6 most significant bits: channel number
-    // 10 least significant bits (2 in upper, 8 in lower byte): channel value    
-    int n;
-    for (n = 0; n < X1TXO_CHANNELS; n++) {
-        x1txoPacket[2 + 2 * n + 0] = (n << 2) | ((ch[n] >> 8) & 0x3);
-        x1txoPacket[2 + 2 * n + 1] =            ((ch[n] >> 0) & 0xFF);
+        // Bytes 2 to 13: all zeroes for INIT
+        
+    } else if (appX1txoData.mode == X1TXO_MODE_NORMAL) {
+        // Bytes 0 and 1: bind / normal operation, otherwise unknown
+        x1txoPacket[0] = 0x18;
+        x1txoPacket[1] = 0x00;
+    
+        // Bytes 2 to 13: channels
+        // 6 most significant bits: channel number
+        // 10 least significant bits (2 in low, 8 in high byte): channel value    
+        int n;
+        for (n = 0; n < X1TXO_CHANNELS; n++) {
+            x1txoPacket[2 + 2 * n + 0] = (n << 2) | ((ch[n] >> 8) & 0x3);
+            x1txoPacket[2 + 2 * n + 1] =            ((ch[n] >> 0) & 0xFF);
+        }
+    } else if (appX1txoData.mode == X1TXO_MODE_BIND) {
+        // Bytes 0 and 1: bind / normal operation, otherwise unknown
+        x1txoPacket[0] = 0x98;
+        x1txoPacket[1] = 0x00;
+    
+        // Bytes 2 to 13: unknown, maybe failsafe channel settings?
+        // We just send what the DX5E transmitter sends:
+        // 0x9800000005FF09FF0DFF10AA14AA
+        x1txoPacket[2] = 0x00;
+        x1txoPacket[3] = 0x00;
+        x1txoPacket[4] = 0x05;
+        x1txoPacket[5] = 0xFF;
+        x1txoPacket[6] = 0x09;
+        x1txoPacket[7] = 0xFF;
+        x1txoPacket[8] = 0x0D;
+        x1txoPacket[9] = 0xFF;
+        x1txoPacket[10] = 0x10;
+        x1txoPacket[11] = 0xAA;
+        x1txoPacket[12] = 0x14;
+        x1txoPacket[13] = 0xAA;
+    } else {
+        // Default mode (INIT): do not send any packets yet
+        return 0;
     }
     
     (void)x1txoPacket;

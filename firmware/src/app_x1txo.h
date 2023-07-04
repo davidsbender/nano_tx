@@ -67,6 +67,14 @@ typedef enum
 
 } APP_X1TXO_STATES;
 
+typedef enum
+{
+    X1TXO_MODE_INIT = 0,
+    X1TXO_MODE_START,
+    X1TXO_MODE_NORMAL,
+    X1TXO_MODE_BIND,
+} X1TXO_MODE;
+
 
 // *****************************************************************************
 /* Application Data
@@ -87,7 +95,7 @@ typedef struct
     APP_X1TXO_STATES state;
 
     /* TODO: Define any additional data used by the application. */
-
+    X1TXO_MODE mode;
 } APP_X1TXO_DATA;
 
 // *****************************************************************************
