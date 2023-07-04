@@ -76,24 +76,27 @@ APP_X1TXO_DATA appX1txoData;
 */
 void APP_X1TXO_Send(void)
 {
-    uint16_t ch[6];
-    uint8_t x1txoPacket[14];
+    const int X1TXO_CHANNELS = 6;
+    uint16_t ch[X1TXO_CHANNELS];
+    uint8_t x1txoPacket[2 + 2 * X1TXO_CHANNELS];
     
-    // Bytes 1 and 0: bind / normal operation, otherwise unknown
+    // Reset packet data
+    memset(x1txoPacket, 0, sizeof(x1txoPacket));
+    
+    // Bytes 0 and 1: bind / normal operation, otherwise unknown
     x1txoPacket[0] = 0x18;
     x1txoPacket[1] = 0x00;
     
-    // Bytes 3 and 2: channel 0
-    //     6 most significant bits: channel number
-    //     10 least significant bits: channel value
-    x1txoPacket[2] = (0 << 2) | ((ch[0] >> 8) & 0x3);
-    x1txoPacket[3] =            ((ch[0] >> 0) & 0xFF);
+    // Bytes 2 to 13: channels
+    // 6 most significant bits: channel number
+    // 10 least significant bits (2 in upper, 8 in lower byte): channel value    
+    int n;
+    for (n = 0; n < X1TXO_CHANNELS; n++) {
+        x1txoPacket[2 + 2 * n + 0] = (n << 2) | ((ch[n] >> 8) & 0x3);
+        x1txoPacket[2 + 2 * n + 1] =            ((ch[n] >> 0) & 0xFF);
+    }
     
-    // Bytes 5 and 4: channel 1
-    //     6 most significant bits: channel number
-    //     10 least significant bits: channel value
-    x1txoPacket[4] = (1 << 2) | ((ch[1] >> 8) & 0x3);
-    x1txoPacket[5] =            ((ch[1] >> 0) & 0xFF);
+    (void)x1txoPacket;
 }
 
 // *****************************************************************************
