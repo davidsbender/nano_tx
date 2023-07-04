@@ -28,6 +28,7 @@
 // *****************************************************************************
 
 #include "app.h"
+#include "app_x1txo.h"
 #include "definitions.h"                // GPIO
 #include "user_hal/crc.h"
 //#include "user_hal/iis2iclx.h"
@@ -215,6 +216,9 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
+    // User button
+    uint32_t button = (GPIO_RA7_BUTTON_Get())? 0 : 1;
+    uint32_t ts32 = _CP0_GET_COUNT();    
 
     /* Check the application's current state. */
     switch ( appData.state )
@@ -232,15 +236,28 @@ void APP_Tasks ( void )
             //W25Q_Init();
             //Capture_Init();
             appData.state = APP_STATE_SERVICE_TASKS;
+            
+            // Enter bind mode
+            if (button != 0) {
+                appX1txoData.mode = X1TXO_MODE_BIND;
+            } else {
+                appX1txoData.mode = X1TXO_MODE_START;
+            }
+            
+            // Initialize edge detection
+            appData.button = button;
             break;
         }
 
         case APP_STATE_SERVICE_TASKS:
         {   
-            // User button
-            uint32_t button = (GPIO_RA7_BUTTON_Get())? 0 : 1;
-            uint32_t ts32 = _CP0_GET_COUNT();
-
+            // Identify state to end binding mode
+            if (button == 0) {
+                if (appX1txoData.mode == X1TXO_MODE_BIND) {
+                    appX1txoData.mode = X1TXO_MODE_START;
+                }
+            }
+            
             // Identify edges and store edge timestamps
             if ((button != 0) && (appData.button == 0)) {
                 // Rising edge
@@ -430,6 +447,21 @@ void APP_Tasks ( void )
 //                            iis2iclxData.newDataCalls,
 //                            iis2iclxData.consecutiveNewDataCalls,
 //                            config.ansEol);
+                } else if (isCmd(command, "DIAG:INT?", &rem)) {
+                    char* param;
+                    int value = 0;
+                    getParam(&rem, &param);
+                    if (paramToInt(param, &value) == false) {
+                        // Invalid parameter
+                    } else {
+                        appX1txoData.interval =
+                                value * 0.001 * CORE_TIMER_FREQUENCY;
+   
+                    }
+                    sprintf(ans, "%f ms, %d raw%s",
+                            appX1txoData.interval * 1000.0 / CORE_TIMER_FREQUENCY,
+                            appX1txoData.interval,
+                            config.ansEol);                    
                 } else if (strstr(command, "DIAG:RES") != NULL) {
                     //W25Q_Init();
                     //Capture_Init();
@@ -465,13 +497,13 @@ void APP_Tasks ( void )
                 GPIO_RA10_LED_Clear();
             } else if ((tsLed & 0x78) == 0x00) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x10)/* && Capture_IsActive()*/) {
+            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x10) && (gwsError != NO_ERROR)) {
+            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x20) && (gwsError != NO_ERROR)) {
+            } else if (((tsLed & 0x78) == 0x20) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x30) && (gwsError != NO_ERROR)) {
+            } else if (((tsLed & 0x78) == 0x30) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
                 GPIO_RA10_LED_Set();
             } else {
                 GPIO_RA10_LED_Clear();
@@ -499,6 +531,11 @@ void APP_Tasks ( void )
             
             // ADC battery voltage
             // (I don't like the generated plib_adc.c library, write own one)
+            //
+            // In case of problems with the ADC:
+            // MCC may have misconfigured the input scan:
+            // The correct setup in "plib_adc.c" is "AD1CSSL = 0xa8f;"
+            // (see GIT history)
             if (IFS0bits.AD1IF) {
                 // ADC input scan stores samples from selected sources in an
                 // array of result buffers, the order is as shown in MCC
@@ -508,6 +545,13 @@ void APP_Tasks ( void )
                         + ADC_ResultGet(ADC_RESULT_BUFFER_1);
                 appData.adcAd9Batms = appData.adcAd9Batms * 15 / 16
                         + ADC_ResultGet(ADC_RESULT_BUFFER_5);
+                
+                appX1txoData.ch[0] = appData.adcAd0GimbalX >> 4; // compensate filter gain
+                appX1txoData.ch[1] = appData.adcAd1GimbalY >> 4; // compensate filter gain
+                appX1txoData.ch[2] = appData.adcAd0GimbalX >> 4; // compensate filter gain
+                appX1txoData.ch[3] = appData.adcAd1GimbalY >> 4; // compensate filter gain
+                appX1txoData.ch[4] = appData.adcAd0GimbalX >> 4; // compensate filter gain
+                appX1txoData.ch[5] = appData.adcAd1GimbalY >> 4; // compensate filter gain
                 IFS0CLR = _IFS0_AD1IF_MASK;
             }
             

@@ -76,9 +76,8 @@ APP_X1TXO_DATA appX1txoData;
 */
 void APP_X1TXO_Send(void)
 {
-    const int X1TXO_CHANNELS = 6;
-    uint16_t ch[X1TXO_CHANNELS];
     uint8_t x1txoPacket[2 + 2 * X1TXO_CHANNELS];
+    uint16_t* ch = appX1txoData.ch;
     
     // Reset packet data to all zeroes
     memset(x1txoPacket, 0, sizeof(x1txoPacket));
@@ -89,6 +88,8 @@ void APP_X1TXO_Send(void)
         x1txoPacket[1] = 0x00;
     
         // Bytes 2 to 13: all zeroes for INIT
+        
+        appX1txoData.mode = X1TXO_MODE_NORMAL;
         
     } else if (appX1txoData.mode == X1TXO_MODE_NORMAL) {
         // Bytes 0 and 1: bind / normal operation, otherwise unknown
@@ -111,24 +112,31 @@ void APP_X1TXO_Send(void)
         // Bytes 2 to 13: unknown, maybe failsafe channel settings?
         // We just send what the DX5E transmitter sends:
         // 0x9800000005FF09FF0DFF10AA14AA
-        x1txoPacket[2] = 0x00;
-        x1txoPacket[3] = 0x00;
-        x1txoPacket[4] = 0x05;
-        x1txoPacket[5] = 0xFF;
-        x1txoPacket[6] = 0x09;
-        x1txoPacket[7] = 0xFF;
-        x1txoPacket[8] = 0x0D;
-        x1txoPacket[9] = 0xFF;
+        x1txoPacket[2]  = 0x00;
+        x1txoPacket[3]  = 0x00;
+        x1txoPacket[4]  = 0x05;
+        x1txoPacket[5]  = 0xFF;
+        x1txoPacket[6]  = 0x09;
+        x1txoPacket[7]  = 0xFF;
+        x1txoPacket[8]  = 0x0D;
+        x1txoPacket[9]  = 0xFF;
         x1txoPacket[10] = 0x10;
         x1txoPacket[11] = 0xAA;
         x1txoPacket[12] = 0x14;
         x1txoPacket[13] = 0xAA;
     } else {
         // Default mode (INIT): do not send any packets yet
-        return 0;
+        return;
     }
     
-    (void)x1txoPacket;
+    UART2_Write(x1txoPacket, sizeof(x1txoPacket));
+    
+    dprintf("APP_X1TXO_Send: <");
+    int i;
+    for (i = 0; i < sizeof(x1txoPacket); i++) {
+        dprintf("%02X", x1txoPacket[i]);
+    }            
+    dprintf(">\n");
 }
 
 // *****************************************************************************
@@ -162,7 +170,8 @@ void APP_X1TXO_Initialize ( void )
 
 void APP_X1TXO_Tasks ( void )
 {
-
+    uint32_t ts32 = _CP0_GET_COUNT();
+    
     /* Check the application's current state. */
     switch (appX1txoData.state)
     {
@@ -170,12 +179,25 @@ void APP_X1TXO_Tasks ( void )
         case APP_X1TXO_STATE_INIT:
         {
             appX1txoData.state = APP_X1TXO_STATE_SERVICE_TASKS;
+            
+            // Default packet transmit interval
+            // A range of 21 to 23 ms works fine with an orange R615X receiver
+            // With <= 20 or >= 24 ms there are interuptions or no connection
+            // at all
+            appX1txoData.interval = 0.022 * CORE_TIMER_FREQUENCY;
+            
+            // Initialize timestamp of last packet send to X1TXO
+            appX1txoData.ts32 = ts32;
             break;
         }
 
         case APP_X1TXO_STATE_SERVICE_TASKS:
         {
-            // Test mode: send incoming character + 1
+            uint32_t ts32 = _CP0_GET_COUNT();
+            
+            // X1TXO TX port (RX for processor): print received data
+            // Can also be used to listen to data transferred from Spektrum
+            // controller to X1TXO module
             unsigned char buffer[128];
             uint32_t size = UART2_Read(buffer, sizeof(buffer) - 1);
             if (size > 0) {
@@ -185,6 +207,13 @@ void APP_X1TXO_Tasks ( void )
                     dprintf("%02X", buffer[i]);
                 }            
                 dprintf(">\n");
+            }
+            
+            // X1TXO RX port (TX for processor): periodically send packet
+            if (ts32 - appX1txoData.ts32 > appX1txoData.interval) {
+                APP_X1TXO_Send();
+                // Remember timestamp of last packet sent to X1TXO
+                appX1txoData.ts32 = ts32;                
             }
             break;
         }

@@ -89,14 +89,20 @@ typedef enum
     Application strings and buffers are be defined outside this structure.
  */
 
+#define X1TXO_CHANNELS 6
+
 typedef struct
 {
     /* The application's current state */
     APP_X1TXO_STATES state;
 
-    /* TODO: Define any additional data used by the application. */
+    /* Additional data used by the application. */
     X1TXO_MODE mode;
+    uint32_t ts32;
+    uint32_t interval;
+    uint16_t ch[X1TXO_CHANNELS];
 } APP_X1TXO_DATA;
+extern APP_X1TXO_DATA appX1txoData;
 
 // *****************************************************************************
 // *****************************************************************************

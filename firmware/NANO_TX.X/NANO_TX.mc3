@@ -4049,7 +4049,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;adc&gt;
   &lt;adc dnOrder=&quot;0&quot; id=&quot;ADC_AD1CSSL&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;adc&quot; value=&quot;2703&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;adc&quot; value=&quot;8079&quot;/&gt;
     &lt;/Values&gt;
   &lt;/adc&gt;
 &lt;/adc&gt;
@@ -10535,7 +10535,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\adc\plib_adc.c</file>
-         <hash>64ff9343ffba03121a20e1901000e1bf3e57e375778da502e31415da03bb3a72</hash>
+         <hash>c16f01b3034eae66eb950ecc22d6bfb89f5bb7163bb10e9c24e021947429c2fc</hash>
       </entry>
       <entry>
          <file>..\src\config\default\driver\usb\usbfs\src\templates\usb_LiveJState_Unsupported.h</file>
@@ -10666,12 +10666,12 @@
          <hash>16fbc4bbf026e4713e9b835b1511411e053aaf92ab7d6a000638630576fe92b3</hash>
       </entry>
       <entry>
-         <file>..\src\config\default\driver\usb\usbfs\src\templates\usb_AutomaticSuspend_Unsupported.h</file>
-         <hash>44641546647b9967a3e2cefbc5565cf38fbdb15ab8b4016084062527d112054c</hash>
-      </entry>
-      <entry>
          <file>..\src\config\default\device.h</file>
          <hash>10ec93c43a7b158a129ae05bd8f4a59ff5bcf3d0f3f062fdd64c374bc2d42099</hash>
+      </entry>
+      <entry>
+         <file>..\src\config\default\driver\usb\usbfs\src\templates\usb_AutomaticSuspend_Unsupported.h</file>
+         <hash>44641546647b9967a3e2cefbc5565cf38fbdb15ab8b4016084062527d112054c</hash>
       </entry>
       <entry>
          <file>..\src\config\default\usb\usb_device_cdc.h</file>
@@ -10887,7 +10887,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\definitions.h</file>
-         <hash>3a299f49154b36aacb1e1507841cadfc3bbf72e6db9682e849ee4437f0556ea4</hash>
+         <hash>072d0eb674ae5c4b65b385c521d79e427611ce8a14e149bc78395b51e8fbbdc4</hash>
       </entry>
       <entry>
          <file>..\src\config\default\system\int\src\sys_int.c</file>
