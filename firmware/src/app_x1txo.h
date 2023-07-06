@@ -89,7 +89,11 @@ typedef enum
     Application strings and buffers are be defined outside this structure.
  */
 
-#define X1TXO_CHANNELS 6
+#define X1TXO_CHANNELS              6
+#define X1TXO_START_PACKETS         17
+// Packet interval: 21 to 23 ms works fine with an orange R615X receiver
+// With <= 20 or >= 24 ms there are interruptions or no connection at all
+#define X1TXO_DEFAULT_INTERVAL_MS   22
 
 typedef struct
 {
@@ -101,6 +105,7 @@ typedef struct
     uint32_t ts32;
     uint32_t interval;
     uint16_t ch[X1TXO_CHANNELS];
+    uint32_t modeStartPackets;
 } APP_X1TXO_DATA;
 extern APP_X1TXO_DATA appX1txoData;
 
@@ -111,6 +116,7 @@ extern APP_X1TXO_DATA appX1txoData;
 // *****************************************************************************
 /* These routines are called by drivers when certain events occur.
 */
+void APP_X1TXO_setMode(X1TXO_MODE mode);
 
 // *****************************************************************************
 // *****************************************************************************

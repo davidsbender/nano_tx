@@ -94,6 +94,7 @@ typedef struct
     uint32_t lastCycleTime;
     uint32_t maxCycleTime;
     uint32_t button;
+    uint32_t buttonHold;
     uint32_t buttonTRise;
     uint32_t buttonTFall;
     bool buttonEventPending;

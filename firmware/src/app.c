@@ -57,6 +57,9 @@
     
 /// Long button press high time: >= 2 s
 #define BUTTON_T_HIGH_LONG (2 * CORE_TIMER_FREQUENCY)
+
+/// Power up button hold time: >= 2 s
+#define BUTTON_T_HOLD (2 * CORE_TIMER_FREQUENCY)
     
 /// Battery low shutdown threshold: 3.5 V
 #define VBAT_LOW_SHUTDOWN 3.5
@@ -242,10 +245,14 @@ void APP_Tasks ( void )
                 appX1txoData.mode = X1TXO_MODE_BIND;
             } else {
                 appX1txoData.mode = X1TXO_MODE_START;
+                appX1txoData.modeStartPackets = 0;
             }
             
-            // Initialize edge detection
+            // Initialize edge and short/long/hold button detection
             appData.button = button;
+            appData.buttonTRise = ts32;
+            appData.buttonTFall = ts32;
+            appData.buttonHold = button;
             break;
         }
 
@@ -255,6 +262,7 @@ void APP_Tasks ( void )
             if (button == 0) {
                 if (appX1txoData.mode == X1TXO_MODE_BIND) {
                     appX1txoData.mode = X1TXO_MODE_START;
+                    appX1txoData.modeStartPackets = 0;
                 }
             }
             
@@ -294,6 +302,15 @@ void APP_Tasks ( void )
                     appData.shutdown = true;
                     //Capture_Stop();
                 }
+            }
+            
+            // Identify hold after power up event
+            appData.buttonHold = (button == 0)? 0: appData.buttonHold;
+            uint32_t tHold = ts32 - appData.buttonTRise;
+            if ((button == 1) && appData.buttonHold
+                    && (tHold >= BUTTON_T_HOLD)) {
+                appData.buttonHold = 0;
+                APP_X1TXO_setMode(X1TXO_MODE_BIND);
             }
             
             // Shutdown mode: wait until capture is no longer pending, then

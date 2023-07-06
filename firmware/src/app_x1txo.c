@@ -72,8 +72,17 @@ APP_X1TXO_DATA appX1txoData;
 // *****************************************************************************
 
 
-/* TODO:  Add any necessary local functions.
-*/
+void APP_X1TXO_setMode(X1TXO_MODE mode)
+{
+
+}
+
+/**
+ * Generates and, if appropriate, sends an X1TXO packet.
+ * Depending on the X1TXO mode, the packet sent contains RC channel data,
+ * receiver bind data.
+ * In idle modes, no data is sent.
+ */
 void APP_X1TXO_Send(void)
 {
     uint8_t x1txoPacket[2 + 2 * X1TXO_CHANNELS];
@@ -87,10 +96,15 @@ void APP_X1TXO_Send(void)
         x1txoPacket[0] = 0x18;
         x1txoPacket[1] = 0x00;
     
-        // Bytes 2 to 13: all zeroes for INIT
+        // Bytes 2 to 13: all zeroes for INIT, so nothing to do here
         
-        appX1txoData.mode = X1TXO_MODE_NORMAL;
-        
+        // Count number of start packets
+        // Then switch to normal mode after sending all start packets
+        appX1txoData.modeStartPackets++;
+        if (appX1txoData.modeStartPackets >= X1TXO_START_PACKETS) {
+            appX1txoData.mode = X1TXO_MODE_NORMAL;
+            appX1txoData.modeStartPackets = 0;
+        }
     } else if (appX1txoData.mode == X1TXO_MODE_NORMAL) {
         // Bytes 0 and 1: bind / normal operation, otherwise unknown
         x1txoPacket[0] = 0x18;
@@ -157,6 +171,7 @@ void APP_X1TXO_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
     appX1txoData.state = APP_X1TXO_STATE_INIT;
+    appX1txoData.modeStartPackets = 0;
 }
 
 
@@ -165,7 +180,7 @@ void APP_X1TXO_Initialize ( void )
     void APP_X1TXO_Tasks ( void )
 
   Remarks:
-    See prototype in app_ble.h.
+    See prototype in app_x1txo.h.
  */
 
 void APP_X1TXO_Tasks ( void )
@@ -181,10 +196,8 @@ void APP_X1TXO_Tasks ( void )
             appX1txoData.state = APP_X1TXO_STATE_SERVICE_TASKS;
             
             // Default packet transmit interval
-            // A range of 21 to 23 ms works fine with an orange R615X receiver
-            // With <= 20 or >= 24 ms there are interuptions or no connection
-            // at all
-            appX1txoData.interval = 0.022 * CORE_TIMER_FREQUENCY;
+            appX1txoData.interval =
+                    X1TXO_DEFAULT_INTERVAL_MS * 0.001 * CORE_TIMER_FREQUENCY;
             
             // Initialize timestamp of last packet send to X1TXO
             appX1txoData.ts32 = ts32;
