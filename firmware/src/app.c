@@ -241,12 +241,7 @@ void APP_Tasks ( void )
             appData.state = APP_STATE_SERVICE_TASKS;
             
             // Enter bind mode
-            if (button != 0) {
-                appX1txoData.mode = X1TXO_MODE_BIND;
-            } else {
-                appX1txoData.mode = X1TXO_MODE_START;
-                appX1txoData.modeStartPackets = 0;
-            }
+            APP_X1TXO_setMode(X1TXO_MODE_INIT);
             
             // Initialize edge and short/long/hold button detection
             appData.button = button;
@@ -260,10 +255,7 @@ void APP_Tasks ( void )
         {   
             // Identify state to end binding mode
             if (button == 0) {
-                if (appX1txoData.mode == X1TXO_MODE_BIND) {
-                    appX1txoData.mode = X1TXO_MODE_START;
-                    appX1txoData.modeStartPackets = 0;
-                }
+                APP_X1TXO_setMode(X1TXO_MODE_NORMAL);
             }
             
             // Identify edges and store edge timestamps
@@ -307,10 +299,12 @@ void APP_Tasks ( void )
             // Identify hold after power up event
             appData.buttonHold = (button == 0)? 0: appData.buttonHold;
             uint32_t tHold = ts32 - appData.buttonTRise;
-            if ((button == 1) && appData.buttonHold
-                    && (tHold >= BUTTON_T_HOLD)) {
+            if (tHold >= BUTTON_T_HOLD) {
+                if ((button == 1) && appData.buttonHold) {
+                    dprintf("<BUTTON HOLD EVENT>\n");
+                    APP_X1TXO_setMode(X1TXO_MODE_BIND);
+                }
                 appData.buttonHold = 0;
-                APP_X1TXO_setMode(X1TXO_MODE_BIND);
             }
             
             // Shutdown mode: wait until capture is no longer pending, then
@@ -344,30 +338,6 @@ void APP_Tasks ( void )
                 char ans[256] = "";
                 if (strstr(command, "HALLO") != NULL) {
                     sprintf(ans, "AU HOI!%s", config.ansEol);
-//                } else if (isCmd(command, "CAPT?", NULL)) {
-//                    sprintf(ans, "%d%s", (Capture_IsActive())? 1: 0, config.ansEol);
-//                } else if (isCmd(command, "CAPT 1", NULL)) {
-//                    Capture_Start();
-//                } else if (isCmd(command, "CAPT 0", NULL)) {
-//                    Capture_Stop();
-//                } else if (strstr(command, "DATA:DEL ALL") != NULL) {
-//                    Capture_Erase();
-//                } else if (isCmd(command, "DATA:READ?", &rem)) {
-//                    char* param0;
-//                    char* param1;
-//                    int file = -1;
-//                    getParam(&rem, &param0);
-//                    getParam(&rem, &param1);
-//                    if (isCmd(param0, "LAST", NULL)) {
-//                        int len = Capture_PrintSample(ans, sizeof(ans),
-//                                &appData.sample);
-//                        sprintf(ans + len, "%s", config.ansEol);
-//                    } else if (paramToInt(param0, &file)) {
-//                        bool binary = (isCmd(param1, "BIN", NULL))? true: false;
-//                        Capture_Read(file, binary, rbHostIn);
-//                    } else {
-//                        sprintf(ans, "%s", config.ansEol);
-//                    }
                 } else if (isCmd(command, "DIAG:ACC?", NULL)) {
                     //LSM6DSV16X_ReadDiagnostic();
                     sprintf(ans, "id: %d, t: %d, ax: %d, ay: %d, az: %d, gx: %d, gy: %d, gz: %d%s",
@@ -380,11 +350,6 @@ void APP_Tasks ( void )
                     sprintf(ans, "appData.maxCycleTime: %d, .lastCycleTime: %d%s",
                             appData.maxCycleTime, appData.lastCycleTime,
                             config.ansEol);
-//                } else if (isCmd(command, "DIAG:APS?", NULL)) {
-//                    LPS22HH_ReadDiagnostic();
-//                    sprintf(ans, "id: %d, p: %u, t: %u%s",
-//                            lps22hhData.id, lps22hhData.p, lps22hhData.t,
-//                            config.ansEol);
                 } else if (strstr(command, "DIAG:ADC?") != NULL) {
                     sprintf(ans, "X %u, Y %u, BATMS %u (%f V)%s",
                             appData.adcAd0GimbalX,
@@ -392,15 +357,6 @@ void APP_Tasks ( void )
                             appData.adcAd9Batms,
                             (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN,
                             config.ansEol);
-//                } else if (isCmd(command, "DIAG:CAPT?", NULL)) {
-//                    sprintf(ans, "sample size: %d, captureData.lastErasedSector: %d, .dataHead: %d, .filesHead: %d (files: %d), .rbFull: %d%s",
-//                            sizeof(CAPTURE_SAMPLE),
-//                            captureData.lastErasedSector,
-//                            captureData.dataHead,
-//                            captureData.filesHead,
-//                            captureData.filesHead / sizeof(FILE_OFFSET),
-//                            captureData.rbFull,
-//                            config.ansEol);
                 } else if (isCmd(command, "DIAG:DEBUG", &rem)) {
                     char* param;
                     int value = 0;
@@ -414,56 +370,8 @@ void APP_Tasks ( void )
                         Debug_Disable();
                         sprintf(ans, "Disable debug output%s", config.ansEol);
                     }
-//                } else if (isCmd(command, "DIAG:DPS?", NULL)) {
-//                    sprintf(ans, "sdp3xData.dp: %d, .t: %d, .sf: %d"
-//                            ", .rCrcDp: %d, .rCrcT: %d, .rCrcSf: %d"
-//                            ", .lCrcDp: %d, .lCrcT: %d, .lCrcSf: %d%s",
-//                    sdp3xData.dp, sdp3xData.t, sdp3xData.sf,
-//                    sdp3xData.rCrcDp, sdp3xData.rCrcT, sdp3xData.rCrcSf,
-//                    sdp3xData.lCrcDp, sdp3xData.lCrcT, sdp3xData.lCrcSf,
-//                    config.ansEol);
                 } else if (isCmd(command, "DIAG:ERR?", NULL)) {
                     sprintf(ans, "%d%s", gwsError, config.ansEol);
-//                } else if (strstr(command, "DIAG:FLAS?") != NULL) {
-//                    uint8_t resp6[6] = {0};
-//                    W25Q_ReadId(resp6);
-//                    uint8_t resp4[4] = {0};
-//                    W25Q_ReadJedecId(resp4);
-//                    sprintf(ans, "ID: 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X 0x%02X, JEDEC ID: 0x%02X 0x%02X 0x%02X 0x%02X%s",
-//                            resp6[0], resp6[1], resp6[2], resp6[3], resp6[4], resp6[5],
-//                            resp4[0], resp4[1], resp4[2], resp4[3],
-//                            config.ansEol);
-//                } else if (strstr(command, "DIAG:FLAS:ERAS") != NULL) {
-//                    W25Q_WriteEnable();
-//                    W25Q_ChipErase();
-//                } else if (strstr(command, "DIAG:FLAS:WEL") != NULL) {
-//                    W25Q_WriteEnable();
-//                } else if (isCmd(command, "DIAG:FLAS:STAT?", &rem)) {
-//                    char* param;
-//                    int reg = -1;
-//                    getParam(&rem, &param);
-//                    bool retval = paramToInt(param, &reg);
-//                    if ((retval == true) && (reg >= 1) && (reg <= 3)) {
-//                        uint8_t resp = 0;
-//                        W25Q_ReadStatusRegister(reg, &resp);
-//                        sprintf(ans, "W25Q status register %d: 0x%02X%s",
-//                                reg, resp, config.ansEol);
-//                    } else {
-//                        sprintf(ans, "Invalid W25Q status register selection"
-//                                " (must be 1...3)%s",
-//                                config.ansEol);
-//                    }
-//                } else if (strstr(command, "DIAG:INCL?") != NULL) {
-//                    sprintf(ans,
-//                            "id: %d, ax: %d, ay: %d, calls: %d, updates: %d,"
-//                            " consecutive updates: %d%s",
-//                            iis2iclxData.id,
-//                            iis2iclxData.x,
-//                            iis2iclxData.y,
-//                            iis2iclxData.allCalls,
-//                            iis2iclxData.newDataCalls,
-//                            iis2iclxData.consecutiveNewDataCalls,
-//                            config.ansEol);
                 } else if (isCmd(command, "DIAG:INT?", &rem)) {
                     char* param;
                     int value = 0;
@@ -479,9 +387,6 @@ void APP_Tasks ( void )
                             appX1txoData.interval * 1000.0 / CORE_TIMER_FREQUENCY,
                             appX1txoData.interval,
                             config.ansEol);                    
-                } else if (strstr(command, "DIAG:RES") != NULL) {
-                    //W25Q_Init();
-                    //Capture_Init();
                 } else if (isCmd(command, "TIME?", NULL)) {
                     sprintf(ans, "%llu%s", appData.ts64, config.ansEol);
                 }
@@ -514,34 +419,23 @@ void APP_Tasks ( void )
                 GPIO_RA10_LED_Clear();
             } else if ((tsLed & 0x78) == 0x00) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+//            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+//                GPIO_RA10_LED_Set();
+//            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+//                GPIO_RA10_LED_Set();
+//            } else if (((tsLed & 0x78) == 0x20) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+//                GPIO_RA10_LED_Set();
+//            } else if (((tsLed & 0x78) == 0x30) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+//                GPIO_RA10_LED_Set();
+            } else if (((tsLed & 0x08) == 0x00) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
                 GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x10) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
-                GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x20) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
-                GPIO_RA10_LED_Set();
-            } else if (((tsLed & 0x78) == 0x30) && (appX1txoData.mode != X1TXO_MODE_NORMAL)) {
+            } else if (appX1txoData.mode == X1TXO_MODE_INIT) {
                 GPIO_RA10_LED_Set();
             } else {
                 GPIO_RA10_LED_Clear();
             }
 
-            // Read IIS2ICLX
-            // The IIS2ICLX is our main data source and defines the sample rate,
-            // whenever an IIS2ICLX sample is ready we read all other sources
-            // too
-//            iis2iclxData.newData = false;
-//            if ((appData.counter & 0x1F) == 0) {
-//                IIS2ICLX_ReadAcceleration();
-//            }
-//            
-//            // Read LPS22H absolute pressure sensor
-//            if (iis2iclxData.newData) {
-//                LPS22HH_ReadPressure();
-//            }
-//            
-//            // Read LSM6DSV16(B)X accelerometer/gyroscope
-//            if (iis2iclxData.newData) {
+            // Read LSM6DSV16(B)X accelerometer/gyroscope
             if ((appData.counter & 0x1F) == 0) {
                 LSM6DSV16X_ReadTAG();
             }
@@ -581,31 +475,6 @@ void APP_Tasks ( void )
                     //RB_Printf(appUsbRbHostIn, "LOW BATTERY VOLTAGE\n");
                 }
             }
-
-//            // Collect a full sample
-//            if (iis2iclxData.newData) {
-//                if (Capture_FirstSample()) {
-//                    appData.ts64FirstSample = appData.ts64;
-//                }
-//                uint64_t ts64 = appData.ts64 - appData.ts64FirstSample;
-//                appData.sample.timestamp = (ts64 / TS_TICKS) & 0x7FFFFFFF;
-//                appData.sample.inclX     = iis2iclxData.x;
-//                appData.sample.inclY     = iis2iclxData.y;
-//                appData.sample.accAX     = lsm6dsv16xData.ax;
-//                appData.sample.accAY     = lsm6dsv16xData.ay;
-//                appData.sample.accAZ     = lsm6dsv16xData.az;
-//                appData.sample.accGX     = lsm6dsv16xData.gx;
-//                appData.sample.accGY     = lsm6dsv16xData.gy;
-//                appData.sample.accGZ     = lsm6dsv16xData.gz;
-//                appData.sample.apsP      = lps22hhData.p;
-//                appData.sample.dpsP      = sdp3xData.dp;
-//                appData.sample.temp      = lps22hhData.t;
-//                appData.sample.vBat      = appData.adcAd9Batms;
-//                Capture_Append(&appData.sample);
-//            }
-//            
-//            // Capture interface task (flash memory)
-//            Capture_Task();
 
             appData.counter++;
             break;

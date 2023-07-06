@@ -74,7 +74,35 @@ APP_X1TXO_DATA appX1txoData;
 
 void APP_X1TXO_setMode(X1TXO_MODE mode)
 {
-
+    // Nothing to do if already in desired target mode
+    if (mode == appX1txoData.mode) {
+        return;
+    }
+    
+    // Transition from INIT to NORMAL requires intermediate mode START
+    if ((mode == X1TXO_MODE_NORMAL) && (appX1txoData.mode == X1TXO_MODE_INIT)) {
+        appX1txoData.modeStartPackets = 0;
+        appX1txoData.mode = X1TXO_MODE_START;
+        return;
+    }
+    
+    // Transition from other modes to NORMAL is immediate
+    if (mode == X1TXO_MODE_NORMAL) {
+        appX1txoData.mode = X1TXO_MODE_NORMAL;
+        return;
+    }
+    
+    // Transition to BIND is immediate
+    if (mode == X1TXO_MODE_BIND) {
+        appX1txoData.mode = X1TXO_MODE_BIND;
+        return;
+    }
+    
+    // Transition to INIT is immediate
+    if (mode == X1TXO_MODE_INIT) {
+        appX1txoData.mode = X1TXO_MODE_INIT;
+        return;
+    }
 }
 
 /**
