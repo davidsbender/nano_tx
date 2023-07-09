@@ -4097,8 +4097,7 @@
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="core" name="!@#harmonyUserData"/>
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;UserData&gt;
   &lt;UserData dnOrder=&quot;0&quot;&gt;
-    &lt;GraphSettings canvasHeight=&quot;506&quot; canvasWidth=&quot;877&quot; dnOrder=&quot;0&quot;/&gt;
-    &lt;ComponentGraph dnOrder=&quot;1&quot; id=&quot;__ROOTVIEW&quot;&gt;
+    &lt;ComponentGraph dnOrder=&quot;0&quot; id=&quot;__ROOTVIEW&quot;&gt;
       &lt;ElementPositions dnOrder=&quot;0&quot;&gt;
         &lt;ElementPosition dnOrder=&quot;0&quot; id=&quot;HarmonyCore&quot; x=&quot;270&quot; y=&quot;63&quot;/&gt;
         &lt;ElementPosition dnOrder=&quot;1&quot; id=&quot;adc&quot; x=&quot;269&quot; y=&quot;418&quot;/&gt;
@@ -4116,6 +4115,7 @@
         &lt;ElementPosition dnOrder=&quot;13&quot; id=&quot;usb_device_cdc&quot; x=&quot;555&quot; y=&quot;246&quot;/&gt;
       &lt;/ElementPositions&gt;
     &lt;/ComponentGraph&gt;
+    &lt;GraphSettings canvasHeight=&quot;506&quot; canvasWidth=&quot;877&quot; dnOrder=&quot;1&quot;/&gt;
   &lt;/UserData&gt;
 &lt;/UserData&gt;
 </value>
@@ -5083,7 +5083,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;BSP_PIN_37_LAT&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;User dnOrder=&quot;0&quot; value=&quot;High&quot;/&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -6688,7 +6688,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;SYS_PORT_C_LAT&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;112&quot;/&gt;
+      &lt;Dynamic dnOrder=&quot;0&quot; id=&quot;core&quot; value=&quot;96&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -10535,7 +10535,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\adc\plib_adc.c</file>
-         <hash>c16f01b3034eae66eb950ecc22d6bfb89f5bb7163bb10e9c24e021947429c2fc</hash>
+         <hash>64ff9343ffba03121a20e1901000e1bf3e57e375778da502e31415da03bb3a72</hash>
       </entry>
       <entry>
          <file>..\src\config\default\driver\usb\usbfs\src\templates\usb_LiveJState_Unsupported.h</file>
@@ -11083,7 +11083,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\gpio\plib_gpio.c</file>
-         <hash>84f45bec2040ed98b8ea6bd11f18f6610d898b149f26512d07060bc3f4434315</hash>
+         <hash>dfb5eb5317acf85f16f02b9aec7d8016bc987838c8b07666716d5965f9286f22</hash>
       </entry>
       <entry>
          <file>..\src\config\default\driver\usb\usbfs\src\templates\usb_BufferFreeze_Default.h</file>

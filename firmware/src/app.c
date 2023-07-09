@@ -231,6 +231,7 @@ void APP_Tasks ( void )
         {
             //Debug_Enable(appUsbRbHostIn);
             GPIO_RA10_LED_Set();
+            
             crcInit();
             //IIS2ICLX_Init();
             //LPS22HH_Init();
@@ -248,6 +249,8 @@ void APP_Tasks ( void )
             appData.buttonTRise = ts32;
             appData.buttonTFall = ts32;
             appData.buttonHold = button;
+            
+            GPIO_RC4_SPI_NCS_ACC_Clear();
             break;
         }
 
@@ -436,9 +439,9 @@ void APP_Tasks ( void )
             }
 
             // Read LSM6DSV16(B)X accelerometer/gyroscope
-            if ((appData.counter & 0x1F) == 0) {
-                LSM6DSV16X_ReadTAG();
-            }
+//            if ((appData.counter & 0x1F) == 0) {
+//                LSM6DSV16X_ReadTAG();
+//            }
             
             // ADC battery voltage
             // (I don't like the generated plib_adc.c library, write own one)
@@ -466,14 +469,22 @@ void APP_Tasks ( void )
                 IFS0CLR = _IFS0_AD1IF_MASK;
             }
             
-            // Low battery voltage shutdown
-            if ((ts32 & TS_2S_MASK) < (ts32d & TS_2S_MASK)) {
-                float vBat = (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN;
-                if (vBat < VBAT_LOW_SHUTDOWN) {
-                    //appData.shutdown = true;
-                    //Capture_Stop();
-                    //RB_Printf(appUsbRbHostIn, "LOW BATTERY VOLTAGE\n");
-                }
+//            // Low battery voltage shutdown
+//            if ((ts32 & TS_2S_MASK) < (ts32d & TS_2S_MASK)) {
+//                float vBat = (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN;
+//                if (vBat < VBAT_LOW_SHUTDOWN) {
+//                    //appData.shutdown = true;
+//                    //Capture_Stop();
+//                    //RB_Printf(appUsbRbHostIn, "LOW BATTERY VOLTAGE\n");
+//                }
+//            }
+            
+            // Low battery voltage alarm
+            float vBat = (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN;
+            if (((tsLed & 0x08) == 0x00) && (vBat < VBAT_LOW_SHUTDOWN)) {
+                GPIO_RC4_SPI_NCS_ACC_Set();
+            } else {
+                GPIO_RC4_SPI_NCS_ACC_Clear();
             }
 
             appData.counter++;
