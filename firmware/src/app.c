@@ -64,6 +64,7 @@
 /// Battery low shutdown threshold: 3.5 V
 #define VBAT_LOW_SHUTDOWN 3.5
 
+/// 2.716619E-04: 3.58 V measured reads as 3.5 V in PIC
 #define CAL_ADC_VBAT_GAIN 2.716619E-04f
 
 // *****************************************************************************
