@@ -224,6 +224,8 @@ void SYS_Initialize ( void* data )
 
     ADC_Initialize();
 
+    NVM_Initialize();
+
     CORETIMER_Initialize();
 	UART1_Initialize();
 

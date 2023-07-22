@@ -123,7 +123,8 @@ _GEN_EXCPT_ADDR                = _ebase_address + 0x180;
 
 MEMORY
 {
-  kseg0_program_mem     (rx)  : ORIGIN = 0x9D000000, LENGTH = 0x40000
+  kseg0_program_mem     (rx)  : ORIGIN = 0x9D000000, LENGTH = 0x3FC00
+  kseg0_nvm_mem        (w!x)  : ORIGIN = 0x9D03FC00, LENGTH = 0x400
   kseg0_boot_mem              : ORIGIN = 0x9FC00490, LENGTH = 0x970
   exception_mem               : ORIGIN = 0x9FC01000, LENGTH = 0x1000
   kseg1_boot_mem              : ORIGIN = 0xBFC00000, LENGTH = 0x490
@@ -133,6 +134,7 @@ MEMORY
   config1                     : ORIGIN = 0xBFC02FF8, LENGTH = 0x4
   config0                     : ORIGIN = 0xBFC02FFC, LENGTH = 0x4
   kseg1_data_mem       (w!x)  : ORIGIN = 0xA0000000, LENGTH = 0x10000
+  
   sfrs                        : ORIGIN = 0xBF800000, LENGTH = 0x100000
   configsfrs                  : ORIGIN = 0xBFC02FF0, LENGTH = 0x10
 }
@@ -158,6 +160,11 @@ SECTIONS
 }
 SECTIONS
 {
+  .nvm_mem :
+  {
+    KEEP(*(.nvm_mem.*))
+    /*KEEP(*(.nvm_mem.nvm))*/
+  } > kseg0_nvm_mem
   /* Boot Sections */
   .reset _RESET_ADDR :
   {

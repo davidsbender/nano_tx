@@ -63,6 +63,7 @@
 
 void CORE_TIMER_InterruptHandler( void );
 void TIMER_3_InterruptHandler( void );
+void NVM_InterruptHandler( void );
 void DRV_USBFS_USB_Handler( void );
 void UART_1_InterruptHandler( void );
 void UART_2_InterruptHandler( void );
@@ -78,6 +79,11 @@ void __ISR(_CORE_TIMER_VECTOR, ipl1SOFT) CORE_TIMER_Handler (void)
 void __ISR(_TIMER_3_VECTOR, ipl1SOFT) TIMER_3_Handler (void)
 {
     TIMER_3_InterruptHandler();
+}
+
+void __ISR(_FCE_VECTOR, ipl1SOFT) FCE_Handler (void)
+{
+    NVM_InterruptHandler();
 }
 
 void __ISR(_USB_1_VECTOR, ipl1SOFT) USB_1_Handler (void)

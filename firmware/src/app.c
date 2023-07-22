@@ -90,6 +90,9 @@
 
 APP_DATA appData;
 
+// Non-volatile memory
+uint8_t appDataNvm[1024] __attribute__((section(".nvm_mem"), used));
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
