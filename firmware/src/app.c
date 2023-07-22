@@ -385,11 +385,23 @@ void APP_Tasks ( void )
                     } else {
                         appX1txoData.interval =
                                 value * 0.001 * CORE_TIMER_FREQUENCY;
-   
                     }
                     sprintf(ans, "%f ms, %d raw%s",
                             appX1txoData.interval * 1000.0 / CORE_TIMER_FREQUENCY,
                             appX1txoData.interval,
+                            config.ansEol);                    
+                } else if (isCmd(command, "DIAG:PAUS?", &rem)) {
+                    char* param;
+                    int value = 0;
+                    getParam(&rem, &param);
+                    if (paramToInt(param, &value) == false) {
+                        // Invalid parameter
+                    } else {
+                        appX1txoData.pause = value;
+                    }
+                    sprintf(ans, "%f us, %d raw%s",
+                            (float)appX1txoData.pause,
+                            appX1txoData.pause,
                             config.ansEol);                    
                 } else if (isCmd(command, "TIME?", NULL)) {
                     sprintf(ans, "%llu%s", appData.ts64, config.ansEol);

@@ -93,7 +93,8 @@ typedef enum
 #define X1TXO_START_PACKETS         17
 // Packet interval: 21 to 23 ms works fine with an orange R615X receiver
 // With <= 20 or >= 24 ms there are interruptions or no connection at all
-#define X1TXO_DEFAULT_INTERVAL_MS   22
+#define X1TXO_DEFAULT_INTERVAL_MS   21
+#define X1TXO_DEFAULT_PAUSE_US      0
 
 typedef struct
 {
@@ -104,6 +105,7 @@ typedef struct
     X1TXO_MODE mode;
     uint32_t ts32;
     uint32_t interval;
+    uint32_t pause;
     uint16_t ch[X1TXO_CHANNELS];
     uint32_t modeStartPackets;
 } APP_X1TXO_DATA;

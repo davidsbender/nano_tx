@@ -171,8 +171,16 @@ void APP_X1TXO_Send(void)
         return;
     }
     
-    UART2_Write(x1txoPacket, sizeof(x1txoPacket));
-    
+    if (appX1txoData.pause > 0) {
+        int i;
+        for (i = 0; i < sizeof(x1txoPacket); i++) {
+            UART2_Write(&x1txoPacket[i], 1);
+            CORETIMER_DelayUs(appX1txoData.pause);
+        }
+    } else {
+        UART2_Write(x1txoPacket, sizeof(x1txoPacket));
+    }
+        
     dprintf("APP_X1TXO_Send: <");
     int i;
     for (i = 0; i < sizeof(x1txoPacket); i++) {
@@ -226,6 +234,9 @@ void APP_X1TXO_Tasks ( void )
             // Default packet transmit interval
             appX1txoData.interval =
                     X1TXO_DEFAULT_INTERVAL_MS * 0.001 * CORE_TIMER_FREQUENCY;
+            
+            // Default byte transmit pause
+            appX1txoData.pause = X1TXO_DEFAULT_PAUSE_US;
             
             // Initialize timestamp of last packet send to X1TXO
             appX1txoData.ts32 = ts32;
