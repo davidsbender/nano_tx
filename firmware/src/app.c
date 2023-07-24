@@ -61,11 +61,17 @@
 /// Power up button hold time: >= 2 s
 #define BUTTON_T_HOLD (2 * CORE_TIMER_FREQUENCY)
     
-/// Battery low shutdown threshold: 3.5 V
-#define VBAT_LOW_SHUTDOWN 3.5
+/// Battery low warning threshold: 3.6 V
+#define VBAT_LOW_WARN 3.6
+#define VBAT_LOW_RELEASE 3.7
 
 /// 2.716619E-04: 3.58 V measured reads as 3.5 V in PIC
-#define CAL_ADC_VBAT_GAIN 2.716619E-04f
+//#define CAL_ADC_VBAT_GAIN 2.716619E-04f
+/// 2.778713E-04: 3.5 V measured should read as 3.5 V in PIC (not yet tested)
+#define CAL_ADC_VBAT_GAIN 2.778713E-04f
+
+/// Beep time: 0.1 s
+#define BEEP_T (0.1 * CORE_TIMER_FREQUENCY)
 
 // *****************************************************************************
 // *****************************************************************************
@@ -253,6 +259,7 @@ void APP_Tasks ( void )
             appData.buttonTRise = ts32;
             appData.buttonTFall = ts32;
             appData.buttonHold = button;
+            appData.tBeep = ts32 + BEEP_T;
             
             GPIO_RC4_SPI_NCS_ACC_Clear();
             break;
@@ -286,9 +293,6 @@ void APP_Tasks ( void )
                 if (appData.buttonEventPending) {
                     dprintf("<SHORT BUTTON PRESS EVENT>\n");
                     appData.buttonEventPending = false;
-                    if (!appData.shutdown) {
-                        //(Capture_IsActive())? Capture_Stop(): Capture_Start();
-                    }
                 }
             }
 
@@ -299,7 +303,6 @@ void APP_Tasks ( void )
                     dprintf("<LONG BUTTON PRESS EVENT>\n");
                     appData.buttonEventPending = false;
                     appData.shutdown = true;
-                    //Capture_Stop();
                 }
             }
             
@@ -318,6 +321,7 @@ void APP_Tasks ( void )
             // disable power supply
             if (appData.shutdown /*&& !Capture_IsPending()*/) {
                 GPIO_RC6_LDOEN_Clear();
+                appData.tBeep = ts32 + BEEP_T;
             }
             
             // Command line interface
@@ -497,10 +501,37 @@ void APP_Tasks ( void )
             
             // Low battery voltage alarm
             float vBat = (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN;
-            if (((tsLed & 0x08) == 0x00) && (vBat < VBAT_LOW_SHUTDOWN)) {
-                GPIO_RC4_SPI_NCS_ACC_Set();
+            if (vBat <= VBAT_LOW_WARN) {
+                appData.vBatAlarm = TRUE;
+            } else if (vBat >= VBAT_LOW_RELEASE) {
+                appData.vBatAlarm = FALSE;
+            }
+            
+            // Beeper
+            // We use GPIO_RC4_SPI_NCS_ACC since in the original PCB design
+            // there was no beeper
+            if (appData.vBatAlarm) {
+                if ((tsLed & 0x08) == 0x00) {
+                    GPIO_RC4_SPI_NCS_ACC_Set();
+                } else {
+                    GPIO_RC4_SPI_NCS_ACC_Clear();
+                }
             } else {
-                GPIO_RC4_SPI_NCS_ACC_Clear();
+                // Difference appData.tBeep - ts32 does overflow, but being
+                // unsigned, it is still correct
+                // Low values (just above zero) indicate the beep time has not
+                // yet completed
+                // High values (just below may) indicate the beep time has
+                // completed (appData.tBeep is from the past, thus less than
+                // ts32)
+                // We simply test for it being below or above midscale
+                uint32_t tBeep = appData.tBeep - ts32;
+                if ((tBeep > 0) && (tBeep < UINT32_MAX / 2)) {
+                    GPIO_RC4_SPI_NCS_ACC_Set();
+                } else {
+                    appData.tBeep = ts32;
+                    GPIO_RC4_SPI_NCS_ACC_Clear();
+                }
             }
 
             appData.counter++;

@@ -97,10 +97,12 @@ typedef struct
     uint32_t buttonHold;
     uint32_t buttonTRise;
     uint32_t buttonTFall;
+    uint32_t tBeep;
     bool buttonEventPending;
     bool buttonEventArmed;
     uint32_t counter;
     bool shutdown;
+    bool vBatAlarm;
     uint32_t adcAd0GimbalX;
     uint32_t adcAd1GimbalY;
     uint32_t adcAd9Batms;
