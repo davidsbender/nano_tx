@@ -1,3 +1,6 @@
 firmware/NANO_TX.X/dist/**
 firmware/NANO_TX.X/build/**
 firmware/NANO_TX.X/.generated_files/**
+firmware/BOOTLOADER.X/dist/**
+firmware/BOOTLOADER.X/build/**
+firmware/BOOTLOADER.X/.generated_files/**
