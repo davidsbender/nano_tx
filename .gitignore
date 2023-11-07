@@ -4,3 +4,4 @@ firmware/NANO_TX.X/.generated_files/**
 firmware/BOOTLOADER.X/dist/**
 firmware/BOOTLOADER.X/build/**
 firmware/BOOTLOADER.X/.generated_files/**
+/log.hxl

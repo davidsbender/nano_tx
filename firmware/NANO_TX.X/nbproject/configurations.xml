@@ -373,6 +373,21 @@
         <archiverTool>
         </archiverTool>
         <loading>
+          <makeArtifact PL="../BOOTLOADER.X"
+                        CT="1"
+                        CN="default"
+                        AC="true"
+                        BL="true"
+                        WD="../BOOTLOADER.X"
+                        BC="${MAKE}  -f Makefile CONF=default"
+                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
+                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
+                        OP="dist/default/production/BOOTLOADER.X.production.hex"
+                        DOP="dist/default/debug/BOOTLOADER.X.debug.elf"
+                        FL="dist/default/production/BOOTLOADER.X.production.hex"
+                        PD="dist/default/production/BOOTLOADER.X.production.elf"
+                        DD="dist/default/debug/BOOTLOADER.X.debug.elf">
+          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>

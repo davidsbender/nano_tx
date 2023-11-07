@@ -41,6 +41,7 @@
 #include <math.h>
 //#include <stdio.h>
 #include "user_hal/printf.h"
+#include "user_hal/strconv.h"
 
 #define TS_FREQ 1000
 #define TS_TICKS (CORE_TIMER_FREQUENCY / TS_FREQ)
@@ -186,8 +187,10 @@ bool paramToInt(char* param, int* value)
         return false;
     }
     char* pend;
-    int valueStrtol = (int)strtol(param, &pend, 10);
-    if (*pend == '\0') {
+//    int valueStrtol = (int)strtol(param, &pend, 10);
+    int valid = 0;
+    int valueStrtol = strToInt(param, &valid, &pend);
+    if (valid && (*pend == '\0')) {
         *value = valueStrtol;
         return true;
     }

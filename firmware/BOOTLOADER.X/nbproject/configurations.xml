@@ -211,7 +211,7 @@
           </logicalFolder>
           <itemPath>../src/config/default/user.h</itemPath>
           <itemPath>../src/config/default/device.h</itemPath>
-          <itemPath>../src/config/default/definitions.h</itemPath>
+          <itemPath>../src/config/default/btl_definitions.h</itemPath>
           <itemPath>../src/config/default/interrupts.h</itemPath>
           <itemPath>../src/config/default/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/default/configuration.h</itemPath>
@@ -311,9 +311,9 @@
               <itemPath>../src/config/default/usb/src/usb_device.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/default/tasks.c</itemPath>
-          <itemPath>../src/config/default/initialization.c</itemPath>
-          <itemPath>../src/config/default/interrupts.c</itemPath>
+          <itemPath>../src/config/default/btl_tasks.c</itemPath>
+          <itemPath>../src/config/default/btl_initialization.c</itemPath>
+          <itemPath>../src/config/default/btl_interrupts.c</itemPath>
           <itemPath>../src/config/default/usb_device_init_data.c</itemPath>
           <itemPath>../src/config/default/exceptions.c</itemPath>
         </logicalFolder>
@@ -321,10 +321,10 @@
       <logicalFolder name="f1" displayName="user_hal" projectFiles="true">
         <itemPath>../src/user_hal/iis2iclx.c</itemPath>
         <itemPath>../src/user_hal/conversion.c</itemPath>
-        <itemPath>../src/user_hal/ringbuffer.c</itemPath>
+        <itemPath>../src/user_hal/btl_ringbuffer.c</itemPath>
         <itemPath>../src/user_hal/w25q.c</itemPath>
         <itemPath>../src/user_hal/capture.c</itemPath>
-        <itemPath>../src/user_hal/debug.c</itemPath>
+        <itemPath>../src/user_hal/btl_debug.c</itemPath>
         <itemPath>../src/user_hal/lps22hh.c</itemPath>
         <itemPath>../src/user_hal/lsm6dsv16x.c</itemPath>
         <itemPath>../src/user_hal/config.c</itemPath>
@@ -333,9 +333,9 @@
         <itemPath>../src/user_hal/bm7x.c</itemPath>
         <itemPath>../src/user_hal/printf.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/app.c</itemPath>
+      <itemPath>../src/btl_app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
-      <itemPath>../src/app_usb.c</itemPath>
+      <itemPath>../src/btl_app_usb.c</itemPath>
       <itemPath>../src/app_ble.c</itemPath>
       <itemPath>../src/app_x1txo.c</itemPath>
     </logicalFolder>
@@ -393,44 +393,198 @@
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
       <item path="../src/app_x1txo.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/app_x1txo.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/adc/plib_adc.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/adc/plib_adc.h"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/power/plib_power.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/power/plib_power.h"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/tmr/plib_tmr2.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/tmr/plib_tmr2.h"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/tmr/plib_tmr_common.h"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/uart/plib_uart2.c"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/config/default/peripheral/uart/plib_uart2.h"
             ex="true"
             overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/user_hal/capture.c" ex="true" overriding="false">
         <C32>
@@ -465,6 +619,20 @@
         </C32Global>
       </item>
       <item path="../src/user_hal/crc.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/user_hal/iis2iclx.c" ex="true" overriding="false">
         <C32>
@@ -531,8 +699,36 @@
         </C32Global>
       </item>
       <item path="../src/user_hal/lsm6dsv16x.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/user_hal/lsm6dsv16x.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="../src/user_hal/sdp3x.c" ex="true" overriding="false">
         <C32>

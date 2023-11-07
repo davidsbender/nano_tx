@@ -89,8 +89,7 @@ OPTIONAL("libmchp_peripheral_32MX274F256D.a")
  *   xc32-gcc src.c -Wl,--defsym=_ebase_address=0x9D001000
  *************************************************************************/
 PROVIDE(_vector_spacing = 0x0001);
-/* Size of bootloader is 0xA000 */
-PROVIDE(_ebase_address = 0x9D000000 + 0xA000 + 0x180);
+PROVIDE(_ebase_address = 0x9D000000);
 
 /*************************************************************************
  * Memory Address Equates
@@ -101,14 +100,10 @@ PROVIDE(_ebase_address = 0x9D000000 + 0xA000 + 0x180);
  * _DBG_CODE_SIZE                 -- In-circuit Debug Executive size
  * _GEN_EXCPT_ADDR                -- General Exception Vector
  *************************************************************************/
-/* Size of bootloader is 0xA000, size of reset vectors is 0x180 */
-_RESET_ADDR                    = 0xBD000000 + 0xA000;
-/*
-_BEV_EXCPT_ADDR                = 0xBD000380 + 0xA000;
-_DBG_EXCPT_ADDR                = 0xBD000480 + 0xA000;
-_DBG_CODE_ADDR                 = 0xBD002000 + 0xA000;
-*/
-
+_RESET_ADDR                    = 0xBFC00000;
+_BEV_EXCPT_ADDR                = 0xBFC00380;
+_DBG_EXCPT_ADDR                = 0xBFC00480;
+_DBG_CODE_ADDR                 = 0xBFC02000;
 _DBG_CODE_SIZE                 = 0xFF0;
 _GEN_EXCPT_ADDR                = _ebase_address + 0x180;
 
@@ -128,13 +123,12 @@ _GEN_EXCPT_ADDR                = _ebase_address + 0x180;
 
 MEMORY
 {
-  /* Size of bootloader is 0xA000 */
-  kseg0_program_mem     (rx)  : ORIGIN = 0x9D000000 + 0xA000 + 0x180, LENGTH = 0x3FC00 - 0xA000 - 0x2000
+  kseg0_program_mem     (rx)  : ORIGIN = 0x9D000000, LENGTH = 0xA000
   kseg0_nvm_mem        (w!x)  : ORIGIN = 0x9D03FC00, LENGTH = 0x400
   kseg0_boot_mem              : ORIGIN = 0x9FC00490, LENGTH = 0x970
   exception_mem               : ORIGIN = 0x9FC01000, LENGTH = 0x1000
   kseg1_boot_mem              : ORIGIN = 0xBFC00000, LENGTH = 0x490
-  /*debug_exec_mem              : ORIGIN = 0xBFC02000, LENGTH = 0xFF0*/
+  debug_exec_mem              : ORIGIN = 0xBFC02000, LENGTH = 0xFF0
   config3                     : ORIGIN = 0xBFC02FF0, LENGTH = 0x4
   config2                     : ORIGIN = 0xBFC02FF4, LENGTH = 0x4
   config1                     : ORIGIN = 0xBFC02FF8, LENGTH = 0x4
@@ -177,26 +171,20 @@ SECTIONS
     KEEP(*(.reset))
     KEEP(*(.reset.startup))
   } > kseg1_boot_mem
-/*
   .bev_excpt _BEV_EXCPT_ADDR :
   {
     KEEP(*(.bev_handler))
   } > kseg1_boot_mem
-*/
   /* Debug exception vector */
-/*
   .dbg_excpt _DBG_EXCPT_ADDR (NOLOAD) :
   {
     . += (DEFINED (_DEBUGGER) ? 0x8 : 0x0);
   } > kseg1_boot_mem
-*/
   /* Space reserved for the debug executive */
-/*
   .dbg_code _DBG_CODE_ADDR (NOLOAD) :
   {
     . += (DEFINED (_DEBUGGER) ? _DBG_CODE_SIZE : 0x0);
   } > debug_exec_mem
-*/
 
   .app_excpt _GEN_EXCPT_ADDR :
   {
@@ -828,6 +816,5 @@ SECTIONS
   .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
   /DISCARD/ : { *(.note.GNU-stack) }
   /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) *(.discard) }
-  /DISCARD/ : { *(._debug_exception) }
 }
 
