@@ -42,6 +42,7 @@
 //#include <stdio.h>
 #include "user_hal/printf.h"
 #include "user_hal/strconv.h"
+#include "bootloader/bootloader_common.h"
 
 #define TS_FREQ 1000
 #define TS_TICKS (CORE_TIMER_FREQUENCY / TS_FREQ)
@@ -351,26 +352,14 @@ void APP_Tasks ( void )
                 }
                 
                 char ans[256] = "";
-                if (strstr(command, "HALLO") != NULL) {
+                if (strstr(command, "HALLO?") != NULL) {
                     sprintf(ans, "AU HOI vom Bootloader!%s", config.ansEol);
-//                } else if (isCmd(command, "DIAG:ACC?", NULL)) {
-//                    //LSM6DSV16X_ReadDiagnostic();
-//                    sprintf(ans, "id: %d, t: %d, ax: %d, ay: %d, az: %d, gx: %d, gy: %d, gz: %d%s",
-//                            lsm6dsv16xData.id, lsm6dsv16xData.t,
-//                            lsm6dsv16xData.ax, lsm6dsv16xData.ay, lsm6dsv16xData.az,
-//                            lsm6dsv16xData.gx, lsm6dsv16xData.gy, lsm6dsv16xData.gz,
-//                            config.ansEol);
+                } else if (isCmd(command, "BTL:RUN", NULL)) {
+                    run_Application(APP_JUMP_ADDRESS);  
                 } else if (isCmd(command, "DIAG:APP?", NULL)) {
                     sprintf(ans, "appData.maxCycleTime: %d, .lastCycleTime: %d%s",
                             appData.maxCycleTime, appData.lastCycleTime,
                             config.ansEol);
-//                } else if (strstr(command, "DIAG:ADC?") != NULL) {
-//                    sprintf(ans, "X %u, Y %u, BATMS %u (%f V)%s",
-//                            appData.adcAd0GimbalX,
-//                            appData.adcAd1GimbalY,
-//                            appData.adcAd9Batms,
-//                            (float)appData.adcAd9Batms * CAL_ADC_VBAT_GAIN,
-//                            config.ansEol);
                 } else if (isCmd(command, "DIAG:DEBUG", &rem)) {
                     char* param;
                     int value = 0;
@@ -386,35 +375,6 @@ void APP_Tasks ( void )
                     }
                 } else if (isCmd(command, "DIAG:ERR?", NULL)) {
                     sprintf(ans, "%d%s", gwsError, config.ansEol);
-//                } else if (isCmd(command, "DIAG:INT?", &rem)) {
-//                    char* param;
-//                    int value = 0;
-//                    getParam(&rem, &param);
-//                    if (paramToInt(param, &value) == false) {
-//                        // Invalid parameter
-//                    } else {
-//                        appX1txoData.interval =
-//                                value * 0.001 * CORE_TIMER_FREQUENCY;
-//                    }
-//                    sprintf(ans, "%f ms, %d raw%s",
-//                            appX1txoData.interval * 1000.0 / CORE_TIMER_FREQUENCY,
-//                            appX1txoData.interval,
-//                            config.ansEol);                    
-//                } else if (isCmd(command, "DIAG:PAUS?", &rem)) {
-//                    char* param;
-//                    int value = 0;
-//                    getParam(&rem, &param);
-//                    if (paramToInt(param, &value) == false) {
-//                        // Invalid parameter
-//                    } else {
-//                        appX1txoData.pause = value;
-//                    }
-//                    sprintf(ans, "%f us, %d raw%s",
-//                            (float)appX1txoData.pause,
-//                            appX1txoData.pause,
-//                            config.ansEol);                    
-//                } else if (isCmd(command, "TIME?", NULL)) {
-//                    sprintf(ans, "%llu%s", appData.ts64, config.ansEol);
                 }
 
                 // Return answer

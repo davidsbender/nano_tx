@@ -57,3 +57,8 @@ uint32_t dprintf(const char* format, ...)
     va_end(vlist);
     return RB_WriteString(debugRb, str);
 }
+
+void _putchar(char character)
+{
+    (void)character;    
+}

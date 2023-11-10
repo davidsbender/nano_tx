@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="bootloader" projectFiles="true">
+        <itemPath>../src/bootloader/bootloader_common.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
           <logicalFolder name="driver" displayName="driver" projectFiles="true">
@@ -211,10 +214,10 @@
           </logicalFolder>
           <itemPath>../src/config/default/user.h</itemPath>
           <itemPath>../src/config/default/device.h</itemPath>
-          <itemPath>../src/config/default/btl_definitions.h</itemPath>
           <itemPath>../src/config/default/interrupts.h</itemPath>
           <itemPath>../src/config/default/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/default/configuration.h</itemPath>
+          <itemPath>../src/config/default/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f1" displayName="user_hal" projectFiles="true">
@@ -242,13 +245,16 @@
                    projectFiles="true">
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
-          <itemPath>../src/config/default/p32MX274F256D.ld</itemPath>
+          <itemPath>../src/config/default/btl_p32MX274F256D.ld</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="bootloader" projectFiles="true">
+        <itemPath>../src/bootloader/bootloader_common.c</itemPath>
+      </logicalFolder>
       <logicalFolder name="config" displayName="config" projectFiles="true">
         <logicalFolder name="default" displayName="default" projectFiles="true">
           <logicalFolder name="driver" displayName="driver" projectFiles="true">
@@ -332,6 +338,7 @@
         <itemPath>../src/user_hal/crc.c</itemPath>
         <itemPath>../src/user_hal/bm7x.c</itemPath>
         <itemPath>../src/user_hal/printf.c</itemPath>
+        <itemPath>../src/user_hal/strconv.c</itemPath>
       </logicalFolder>
       <itemPath>../src/btl_app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
@@ -359,7 +366,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.20</languageToolchainVersion>
+        <languageToolchainVersion>4.21</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

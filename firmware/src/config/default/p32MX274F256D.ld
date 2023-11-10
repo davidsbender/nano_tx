@@ -133,7 +133,7 @@ MEMORY
   kseg0_nvm_mem        (w!x)  : ORIGIN = 0x9D03FC00, LENGTH = 0x400
   kseg0_boot_mem              : ORIGIN = 0x9FC00490, LENGTH = 0x970
   exception_mem               : ORIGIN = 0x9FC01000, LENGTH = 0x1000
-  kseg1_boot_mem              : ORIGIN = 0xBFC00000, LENGTH = 0x490
+  kseg1_boot_mem              : ORIGIN = 0xBFC00000, LENGTH = 0x490 ?????? see ap_mx.ld
   /*debug_exec_mem              : ORIGIN = 0xBFC02000, LENGTH = 0xFF0*/
   config3                     : ORIGIN = 0xBFC02FF0, LENGTH = 0x4
   config2                     : ORIGIN = 0xBFC02FF4, LENGTH = 0x4

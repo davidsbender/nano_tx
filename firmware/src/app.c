@@ -347,7 +347,7 @@ void APP_Tasks ( void )
                 }
                 
                 char ans[256] = "";
-                if (strstr(command, "HALLO") != NULL) {
+                if (strstr(command, "HALLO?") != NULL) {
                     sprintf(ans, "AU HOI!%s", config.ansEol);
                 } else if (isCmd(command, "DIAG:ACC?", NULL)) {
                     //LSM6DSV16X_ReadDiagnostic();
