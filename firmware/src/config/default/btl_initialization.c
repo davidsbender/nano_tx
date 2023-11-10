@@ -46,7 +46,7 @@
 #include "configuration.h"
 #include "definitions.h"
 #include "device.h"
-
+#include "bootloader/bootloader_common.h"
 
 
 // ****************************************************************************
@@ -201,9 +201,17 @@ void SYS_Initialize ( void* data )
 
     /* Start out with interrupts disabled before configuring any modules */
     __builtin_disable_interrupts();
-
-  
+    
     CLK_Initialize();
+    
+    /* Set the SRAM wait states to One */
+    BMXCONbits.BMXWSDRM = 1;
+    
+    GPIO_Initialize();
+    
+    __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
+    
+    run_Application(APP_JUMP_ADDRESS);
 
     /* Configure KSEG0 as cacheable memory. This is needed for Prefetch Buffer */
     __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
@@ -218,7 +226,7 @@ void SYS_Initialize ( void* data )
 
 
 
-	GPIO_Initialize();
+	
 //	POWER_Initialize();
 
 

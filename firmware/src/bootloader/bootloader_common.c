@@ -153,6 +153,13 @@ void run_Application(uint32_t address)
 
     void (*fptr)(void);
 
+        // Cheap delay. This should give at leat 1 ms delay.
+    int i;
+    for (i = 0; i < 2000; i++)
+    {
+        asm("nop");
+    }
+    
     fptr = (void (*)(void))address;
 
     if (jumpAddrVal == 0xffffffff)
@@ -162,8 +169,17 @@ void run_Application(uint32_t address)
 
     /* Call Deinitialize routine to free any resources acquired by Bootloader */
     SYS_DeInitialize(NULL);
+    
+    SYS_INT_Disable();
 
     __builtin_disable_interrupts();
+    
+//    DCACHE_CLEAN_BY_ADDR(ramStart, 4);
+//    
+//    SYS_CACHE_CleanDCache();
+//    
+//    PRISS = 0;
+    
 
     fptr();
 }

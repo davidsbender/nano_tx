@@ -341,10 +341,10 @@
         <itemPath>../src/user_hal/strconv.c</itemPath>
       </logicalFolder>
       <itemPath>../src/btl_app.c</itemPath>
-      <itemPath>../src/main.c</itemPath>
       <itemPath>../src/btl_app_usb.c</itemPath>
       <itemPath>../src/app_ble.c</itemPath>
       <itemPath>../src/app_x1txo.c</itemPath>
+      <itemPath>../src/btl_main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -364,9 +364,9 @@
         <targetDevice>PIC32MX274F256D</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.21</languageToolchainVersion>
+        <languageToolchainVersion>4.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -382,6 +382,21 @@
         <archiverTool>
         </archiverTool>
         <loading>
+          <makeArtifact PL="../NANO_TX.X"
+                        CT="1"
+                        CN="default"
+                        AC="true"
+                        BL="true"
+                        WD="../NANO_TX.X"
+                        BC="${MAKE}  -f Makefile CONF=default"
+                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
+                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
+                        OP="dist/default/production/NANO_TX.X.production.hex"
+                        DOP="dist/default/debug/NANO_TX.X.debug.elf"
+                        FL="dist/default/production/NANO_TX.X.production.hex"
+                        PD="dist/default/production/NANO_TX.X.production.elf"
+                        DD="dist/default/debug/NANO_TX.X.debug.elf">
+          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
@@ -805,24 +820,24 @@
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
         <property key="enable-app-io" value="false"/>
-        <property key="enable-omit-frame-pointer" value="true"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="exclude-floating-point" value="true"/>
+        <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories" value="../src;../src/config/default"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
         <property key="optimization-level" value="-O2"/>
-        <property key="place-data-into-section" value="true"/>
-        <property key="post-instruction-scheduling" value="schedule-insns2"/>
-        <property key="pre-instruction-scheduling" value="schedule-insns"/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
-        <property key="tentative-definitions" value="-fcommon"/>
-        <property key="toplevel-reordering" value="-ftoplevel-reorder"/>
+        <property key="tentative-definitions" value="-fno-common"/>
+        <property key="toplevel-reordering" value=""/>
         <property key="unaligned-access" value=""/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
@@ -979,6 +994,7 @@
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

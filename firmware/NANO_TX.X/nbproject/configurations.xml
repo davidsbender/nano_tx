@@ -360,7 +360,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.21</languageToolchainVersion>
+        <languageToolchainVersion>4.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -376,21 +376,6 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../BOOTLOADER.X"
-                        CT="1"
-                        CN="default"
-                        AC="true"
-                        BL="true"
-                        WD="../BOOTLOADER.X"
-                        BC="${MAKE}  -f Makefile CONF=default"
-                        DBC="${MAKE}  -f Makefile CONF=default TYPE_IMAGE=DEBUG_RUN"
-                        CC="rm -rf &quot;build/default&quot; &quot;dist/default&quot;"
-                        OP="dist/default/production/BOOTLOADER.X.production.hex"
-                        DOP="dist/default/debug/BOOTLOADER.X.debug.elf"
-                        FL="dist/default/production/BOOTLOADER.X.production.hex"
-                        PD="dist/default/production/BOOTLOADER.X.production.elf"
-                        DD="dist/default/debug/BOOTLOADER.X.debug.elf">
-          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
@@ -582,7 +567,7 @@
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
         <property key="optimization-level" value="-O2"/>
-        <property key="place-data-into-section" value="true"/>
+        <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
@@ -652,7 +637,8 @@
         <property key="no-startup-files" value="false"/>
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros"
+                  value="ROM_LENGTH=0x38000;ROM_ORIGIN=0x1D00A000"/>
         <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="serial-length" value=""/>
