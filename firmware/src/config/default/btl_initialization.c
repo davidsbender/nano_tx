@@ -209,7 +209,7 @@ void SYS_Initialize ( void* data )
     
     GPIO_Initialize();
     
-    __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
+//    __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
     
     run_Application(APP_JUMP_ADDRESS);
 

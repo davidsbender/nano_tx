@@ -5,6 +5,9 @@
         <group>
             <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/bootloader/bootloader_common.c</file>
             <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/bootloader/bootloader_common.h</file>
+            <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/btl_main.c</file>
+            <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/config/default/btl_initialization.c</file>
+            <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/btl_app.c</file>
             <file>file:/C:/Users/DB/Desktop/nano_tx/firmware/src/main.c</file>
         </group>
     </open-files>
